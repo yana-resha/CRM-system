@@ -58,7 +58,16 @@
 
   function createModalWindow (obj) {
     // создаю само модальное окно с фоном
+    const containerModal = document.createElement('div');
+    containerModal.classList.add('container-modal');
+    function addOpacity () {
+      containerModal.classList.add('modal-window-opacity');
+    }
+
+    setTimeout(addOpacity, 300)
+   
     const opacityHidden = 'modal-window-opacity';
+
     const modalBackground = document.createElement('div');
     modalBackground.classList.add('modal-background');
     const modalWindow = document.createElement('div');
@@ -66,19 +75,14 @@
     const modalCloseBtn = document.createElement('button');
     modalCloseBtn.innerHTML = '	&#215;';
     modalCloseBtn.classList.add('modal-close-btn');
+    containerModal.append(modalBackground, modalWindow)
     modalWindow.append(modalCloseBtn)
     
     modalCloseBtn.addEventListener('click', () => {
-      modalBackground.classList.remove(opacityHidden);
-      modalWindow.classList.remove(opacityHidden);
-      modalBackground.remove();
-      modalWindow.remove();
+      containerModal.classList.remove(opacityHidden);
     });
     modalBackground.addEventListener('click', () => {
-      modalBackground.classList.remove(opacityHidden);
-      modalWindow.classList.remove(opacityHidden);
-      modalBackground.remove();
-      modalWindow.remove();
+      containerModal.classList.remove(opacityHidden);
     });   
     const modalFlexContent = document.createElement('div');
     modalFlexContent.classList.add('change-content');
@@ -147,9 +151,6 @@
       });
     });
 
-    // if (contactForm.children.length < 2) {
-    //   modalWindow.classList.add('scale')
-    // }
     modalFlexContent.append(form);
     
     if (Object.keys(obj).length > 0) {
@@ -213,8 +214,8 @@
       });
     });
     modalDelBtn.addEventListener('click', () => {
-      modalBackground.classList.remove(opacityHidden);
-      modalWindow.classList.remove(opacityHidden);
+      containerModal.classList.remove(opacityHidden);
+      // modalWindow.classList.remove(opacityHidden);
     });
     
     
@@ -222,20 +223,25 @@
     contactForm.append(addBtn);
     form.append(inputContainer, contactForm, errorText, modalSaveBtn);
     modalWindow.append(modalFlexContent)
-    document.body.append(modalBackground);
-    document.body.append(modalWindow);
-      
-    return {modalBackground, modalWindow, modalFlexContent, form, modalSaveBtn, modalDelBtn, surnameInput, nameInput, lastnameInput, errorText};
+    document.body.append(containerModal);
+    return {containerModal, modalBackground, modalWindow, modalFlexContent, form, modalSaveBtn, modalDelBtn, surnameInput, nameInput, lastnameInput, errorText};
   }
 
 
   function createModalWindowToDelete (obj) {
     const opacityHidden = 'modal-window-opacity';
+    const containerModal = document.createElement('div');
+    containerModal.classList.add('container-modal');
+    function addOpacity () {
+      containerModal.classList.add(opacityHidden);
+    }
+
+    setTimeout(addOpacity, 300)
     // делаю модальное окно на кнопку удалить которое открывается из таблицы
-    const modalContainer = document.createElement('div');
-    modalContainer.classList.add('modal-background', opacityHidden);
+    const modalBackground = document.createElement('div');
+    modalBackground.classList.add('modal-background');
     const modalForm = document.createElement('div');
-    modalForm.classList.add('modal-window', opacityHidden);
+    modalForm.classList.add('modal-window');
     const modalCloseBtn = document.createElement('button');
     modalCloseBtn.innerHTML = '	&#215;';
     modalCloseBtn.classList.add('modal-close-btn');
@@ -255,27 +261,23 @@
     modalCancelBtn.textContent = 'Отмена';
     modalFlexContent.append(modalTitle, modalText, modalDeleteBtn, modalCancelBtn)
     modalForm.append(modalCloseBtn, modalFlexContent)
-    document.body.append(modalContainer)
-    document.body.append(modalForm)
+    document.body.append(containerModal)
+    containerModal.append(modalBackground, modalForm)
     modalCancelBtn.addEventListener('click', () => {
-      modalContainer.classList.remove(opacityHidden);
-      modalForm.classList.remove(opacityHidden)
+      containerModal.classList.remove(opacityHidden);
     })
-    modalContainer.addEventListener('click', () => {
-      modalContainer.classList.remove(opacityHidden);
-      modalForm.classList.remove(opacityHidden)
+    modalBackground.addEventListener('click', () => {
+      containerModal.classList.remove(opacityHidden);
     })
     modalCloseBtn.addEventListener('click', () => {
-      modalContainer.classList.remove(opacityHidden)
-      modalForm.classList.remove(opacityHidden)
+      containerModal.classList.remove(opacityHidden)
     })
     modalDeleteBtn.addEventListener('click', () => {
       onDelete(obj);
-      modalContainer.classList.remove(opacityHidden)
-      modalForm.classList.remove(opacityHidden)
+      containerModal.classList.remove(opacityHidden)
       
     });
-    return {modalContainer, modalForm, modalDeleteBtn}
+    return {containerModal ,modalBackground, modalForm, modalDeleteBtn}
   }
 
   function createRowAndCell (obj, array = []) {
@@ -407,9 +409,6 @@
       const response = await fetch(`http://localhost:3000/api/clients/${obj.id}`)
       const clientById = await response.json();
       const modalChange = createModalWindow(clientById);
-      modalChange.modalBackground.classList.add('modal-window-opacity');
-      modalChange.modalWindow.classList.add('modal-window-opacity');
-      
       modalChange.modalDelBtn.addEventListener('click', (e) => {
         e.preventDefault();
         const modalWindowToDelete = createModalWindowToDelete(obj);
@@ -440,10 +439,10 @@
       else if (response.status === 200 || response.status === 201) {
           const сhangeResponse = await fetch(`http://localhost:3000/api/clients/${data.id}`);
           const changeData = await сhangeResponse.json();
-          modalChange.modalBackground.classList.remove(opacityHidden);
-          modalChange.modalWindow.classList.remove(opacityHidden);
-          modalChange.modalBackground.remove();
-          modalChange.modalWindow.remove();
+          modalChange.containerModal.classList.remove(opacityHidden);
+          // modalChange.modalWindow.classList.remove(opacityHidden);
+          // modalChange.modalBackground.remove();
+          // modalChange.modalWindow.remove();
           Array.from(cellContact.children).forEach(el => el.remove());
           const changeTextContentCell = cellContent(changeData);
           const indexObjInArray = array.indexOf(obj);
@@ -673,8 +672,6 @@
     $createClientBtn.addEventListener('click', async () => {
       const nullObj = {};
       const modalNewClient = createModalWindow(nullObj);
-      modalNewClient.modalBackground.classList.add(opacityHidden);
-      modalNewClient.modalWindow.classList.add(opacityHidden);
       modalNewClient.modalSaveBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         const newClient = postNewClient(modalNewClient);
@@ -698,10 +695,10 @@
           const createNewClientInTable = createRowAndCell(newData, sortArray)
           sortArray.push(newData);
 
-          modalNewClient.modalBackground.classList.remove(opacityHidden);
-          modalNewClient.modalWindow.classList.remove(opacityHidden);
-          modalNewClient.modalBackground.remove();
-          modalNewClient.modalWindow.remove();
+          modalNewClient.containerModal.classList.remove(opacityHidden);
+          // modalNewClient.modalWindow.classList.remove(opacityHidden);
+          // modalNewClient.modalBackground.remove();
+          // modalNewClient.modalWindow.remove();
         
         }
         else {

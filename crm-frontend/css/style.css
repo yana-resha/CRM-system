@@ -178,12 +178,12 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
 
 .table-clients__sort-btn svg {
     transform: rotate(0deg);
-    transition: 1s;
+    transition: transform 1s ease-in-out;
 }
 
 .min svg {
     transform: rotate(180deg);
-    transition: 1s;
+    transition: transform 1s ease-in-out;
 }
 
 .table-clients__svg {
@@ -533,11 +533,6 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
 }
 
 
-/* .contact-row select:focus,
-.contact-row select:active{
-    background-image: url(../img/arrow.png);
-} */
-
 .choices {
     outline: none;
     min-width: 123px;
@@ -752,31 +747,36 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
 
 /* модальное окно для кнопки изменить в таблице */
 
-.modal-background {
-    opacity: 0;
+.container-modal {
+    overflow: scroll;
+    position: fixed;
     visibility: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    background-color: rgba(0, 0, 0, .5);
+    
+}
+
+
+.modal-background {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, .5);
     z-index: 20;
-    transition: 1s ease-in-out;
  } 
 
 .modal-window {
-    opacity: 0;
-    visibility: hidden;
-    /*  Установаем ширину окна  */
-    /* padding-left: 30px; */
-    /* padding-right: 5px; */
-    /* min-width: 450px; */
     width: 30%;
     padding-top: 24px;
     padding-bottom: 25px;
     /*  Центрируем и задаем z-index */
-    position: fixed;
+    position: absolute;
     top: 10%;
     /* bottom: 50%; */
     left: calc(50% - (30%/2));
@@ -789,21 +789,16 @@ input[type="search"]::-webkit-search-results-decoration { display: none; }
     justify-content: space-between;
     border-radius: 3px;
     background-color: #fff;
-   
-    transition: 1s ease-in-out;
 }
+
 
 .modal-window-opacity {
     opacity: 1;
     visibility: visible;
-    transition: 1s ease-in-out;
-} 
-
-.scale {
-    top: 0px;
-    transition: 1s;
-    transform: scale(0.7);
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
+
+
 
 .modal-close-btn {
     position: absolute;
